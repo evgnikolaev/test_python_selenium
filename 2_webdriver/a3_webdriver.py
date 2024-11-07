@@ -4,30 +4,76 @@
 https://habr.com/ru/companies/otus/articles/596071/
 
 
-        Поиск в консоли браузера:
+
+            Поиск в консоли браузера:
                 $$('css-селектор')
                 $x('Xpath-селектор')
 
-            //
-            /
-            [@atribute ..]
-            (//input[@class="OouJcb"])[2]
-             .
-             ..
 
-             ancestor::
-             ancestor-of-self::
-             following-sibling::
-             preceding-sibling::
-             parent::
+
+            Xpath - xml-путь
+
+
+            /html/body/div/  -  абсолютный - полный путь по дереву ( / - корень)
+            //body//a   - относительный - можем перескакивать, пропускать элементы в дереве
+            Можно комбинировать  -  //div/div//a
+
+
+
+             Атрибуты  [@ ..]
+             //input[@id="OouJcb"]
+
+             Несколько атрибутов (более уточняющий)
+             //input[@id="OouJcb" and @class="OouJcb"]//ul/li
+
+
+             *любой элемент
+             //*[@id="OouJcb"]
+             //input[@id="OouJcb" and @class="OouJcb"]//ul/*
+
+             //input[1] - 1-ый инпут
+             (//input[@class="OouJcb"])[2] - 2-ый инпут, оборачиваем в скобки у сложной конструкции
+
+
+             . - текущий узел
+             .. - узел на уровень выше
+             //table/.//tr - ищем tr в рамках таблицы
+
+
+
+
+
+             Оси:
+             ancestor:: -  найди предков
+             ancestor-of-self:: - найди себя и предков
+             //input[@class="vector-search-box-input"]/ancestor::form  (предки формы у инпута)
+
+             following-sibling::  - соседи
+             preceding-sibling::  - соседи выше элемента
+             //input[@class="vector-search-box-input"]/following-sibling::* - (все соседи инпута)
+
+             parent::  - найди 1-го родителя
+             //input[@class="vector-search-box-input"]/parent::div
+
+
+
+
 
 
              Функции Xpath:
-                last() - последний из коллекции
-                text() - по тексту, содержимому
-                contains() - содержит ли
-                start-with() - начинается ли
-                    h1[contains(text(),'How people')]
+             last() - последний из коллекции
+             //*[@id="simpleSearch"]/input[last()]
+
+             text() - по тексту, содержимому
+             //a[text()="Apple Records"]
+
+             contains() - содержит ли
+             //li[contains(@class,'mw-list-item')]
+             //h1[contains(text(),'How people')]
+
+             start-with() - начинается ли
+             //input[startt-with(@title,''Go to)]
+
 
 
 
@@ -43,16 +89,14 @@ https://habr.com/ru/companies/otus/articles/596071/
 
 
 
-            driver.get();
-            driver.title
-            driver.current_url
----              driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-            driver.quit();
+            driver
+                .get();
+                .title
+                .current_url
+                .implicitly_wait(5)
+                .quit();
 
-
----            driver.manage().window()
----                .maximize();
----               .setSize(new Dimension(640, 320));
+                .set_window_size(1920, 300)
 
 
             driver.
@@ -85,26 +129,27 @@ https://habr.com/ru/companies/otus/articles/596071/
 
 
 
----            WebElement a
----                 .getText()
----                  .click()
+            WebElement a
+                .text
+                .click()
 
 
----         WebElement btn
----                .getText()
----                 .click()
----                  .submit()
----                      .isEnabled()
----                     .isDisplayed()
+            WebElement btn
+                .text()
+                .click()
+                .submit()
+                    .is_enabled()
+                    .is_displayed()
 
 
----          WebElement input
-                   .get_attribute("value")
----                  .clear()
-                 .send_keys()
----                  input.send_keys(Keys.chord(Keys.SHIFT, "test Keys"));
----                          Keys.ENTER
----                           Keys.chord(Keys.CONTROL, "a")
+
+            WebElement input
+                .get_attribute("value")
+                .clear()
+                .send_keys()
+                    .send_keys(Keys.ENTER);
+                    .send_keys(Keys.CONTROL,'a')
+
 
 
               WebElement input[@type='file']
@@ -124,8 +169,8 @@ https://habr.com/ru/companies/otus/articles/596071/
 
 
 
----            WebElement checkbox, radio
----                   .click()
+            WebElement checkbox, radio
+                    .click()
 ---                        .isSelected()
 
 
@@ -318,19 +363,8 @@ https://habr.com/ru/companies/otus/articles/596071/
 
 
 
----            .assertTrue(1 + 1 == 2) - проверка на true
----            .assertFalse(1 + 1 == 10)- проверка на false
 
----            .assertNull() - проверка на Null
----            .assertNotNull() - проверка на Null
-
----            .assertEquals(10, 5 + 5) - проверка на сравнение
----            .assertNotEquals(10, 5 + 5) - проверка на сравнение
-
-
----            .assertTrue("Метод провалился",1 + 1 == 12) - Можно 1-м параметром передавать сообщение при провале теста
----            Тесты могут выполняться в любом порядке, они должны быть независимые.
-
+         -------------------------------------------
 
 
             Юнит-тесты:
@@ -360,18 +394,175 @@ https://habr.com/ru/companies/otus/articles/596071/
 
 
 
+         -------------------------------------------
 
 
 
-unittest, PyTest
+                PyTest:
+
+                    pip install pytest==7.1.2            установка PyTest
+                    pip freeze > requirements.txt        фиксируем пакеты в requirements.txt
+                    pip install -r requirements.txt      установить все пакеты из requirements.txt
+
+                    pytest file.py    - запуск
 
 
----             JUnit:
----                @BeforeClass - в самом начале один раз перед всеми методами
----                @AfterClass - в самом конце один раз после всех методов
----               @Before - перед каждым тестовым методом
----                @After - после каждоого тестового метода
----                @Ignore - не выполнять тестовый метод
+                Преимущества:
+                1) PyTest полностью обратно совместим с фреймворками unittest
+                2) Подробный отчёт с поддержкой цветовых схем из коробки.
+                3) PyTest не требует написания дополнительных специфических конструкций в тестах, как того требует unittest (no boilerplate).
+                4) Для проверок используется стандартный assert из Python.
+                5) Возможность создания динамических фикстур (специальных функций, которые настраивают тестовые окружения и готовят тестовые данные).
+                6) Дополнительные возможности по настройке фикстур.
+                7) Параметризация тестов — для одного теста можно задать разные параметры (тест запустится несколько раз с разными тестовыми данными).
+                8) Наличие маркировок (marks), которые позволяют маркировать тесты для их выборочного запуска.
+                9) Возможность передавать дополнительные параметры через командную строку для настройки тестовых окружений.
+                10) Большое количество плагинов, которые расширяют возможности PyTest и позволяют решать узкоспециализированные проблемы, что может сэкономить много времени.
+
+                Недостатки:
+                1) PyTest требуется устанавливать дополнительно, так как он не входит в стандартный пакет библиотек Python, в отличие от unittest.
+                2) Использование PyTest требует более глубокого понимания языка Python, чтобы разобраться, как применять фикстуры, параметризацию и другие возможности PyTest.
+
+
+
+
+
+
+
+                PyTest: правила запуска тестов
+
+                    Когда мы выполняем команду  pytest file.py , тест-раннер собирает все тесты для запуска по определенным правилам:
+                     - если мы не передали никакого аргумента в команду, а написали просто pytest, тест-раннер начнёт поиск в текущей директории
+                     - как аргумент можно передать файл, путь к директории или любую комбинацию директорий и файлов, например:
+
+                            # найти все тесты в директории scripts/selenium_scripts
+                            pytest scripts/selenium_scripts
+
+                            # найти и выполнить все тесты в файле
+                            pytest test_user_interface.py
+
+                            # найти тест с именем test_register_new_user_parametrized в указанном файле в указанной директории и выполнить
+                            pytest scripts/drafts.py::test_register_new_user_parametrized
+
+
+                     - дальше происходит рекурсивный поиск: то есть PyTest обойдет все вложенные директории
+                     - во всех директориях PyTest ищет файлы, которые удовлетворяют правилу  test_*.py или *_test.py (то есть начинаются на test_ или заканчиваются _test и имеют расширение .py)
+                     - внутри всех этих файлов находит тестовые функции по следующему правилу:
+                            - все тесты, название которых начинается с test, которые находятся вне классов
+                            - все тесты, название которых начинается с test внутри классов, имя которых начинается с Test (и без метода __init__ внутри класса)
+
+
+
+         -------------------------------------------
+
+
+                        1) Юнит-тест
+
+                                    import unittest
+
+
+                                    class TestAbs(unittest.TestCase):
+                                        def test_abs1(self):
+                                            self.assertEqual(abs(-42), 42, "Should be absolute value of a number")
+
+                                        def test_abs2(self):
+                                            self.assertEqual(abs(-42), -42, "Should be absolute value of a number")
+
+
+                                    if __name__ == "__main__":
+                                        unittest.main()
+
+
+
+                        2) Pytest
+
+                                    def test_abs1():
+                                        assert abs(-42) == 42, "Should be absolute value of a number"
+
+                                    def test_abs2():
+                                        assert abs(-42) == -42, "Should be absolute value of a number"
+
+
+
+
+
+         -------------------------------------------
+
+
+            L3_4_2__fixture.py - файл
+
+            Фикстуры в контексте PyTest — это вспомогательные функции для наших тестов, которые не являются частью тестового сценария.
+            Классический способ работы с фикстурами — создание setup- и teardown-методов в файле с тестами
+
+            pytest  -s  2_webdriver/L3_4_2__fixture.py        // -s, чтобы увидеть текст, который выводится командой print().
+
+
+             - префиксы setup_*, teardown_* отвечают за порядок исполнения фикстур: до чего-то, после чего-то.
+             - постфиксы *_class, *_method и другие отвечают за уровень применения фикстур: ко всему классу, к каждому методу в классе и тд.
+
+                Исходя их логики выше:
+
+                    setup_class - выполняется один раз перед запуском всех тестовых методов в классе
+                    teardown_class  - выполянется один раз после
+                    setup_method  - выполняется перед запуском каждого тестового метода в классе
+                    teardown_method - выполняется каждый раз после
+
+                Про декоратор:
+                @classmethod декоратор, использованный для удобства чтения кода. Так мы дополнительно размечаем в коде, что метод ниже (в нашем примере с *_class) применяется ко всему классу.
+
+
+
+
+         -------------------------------------------
+
+
+                L3_4_3__fixture.py - файл
+
+                Фикстуры, возвращающие значение
+
+                1) Создадим фикстуру browser,
+                2) @pytest.fixture - укажем, что он является фикстурой с помощью декоратора @pytest.fixture
+                3) Всё, что идёт до оператора yield является “setup”, а всё, что после — “teardown” (yield, к слову, может ничего и не возвращать, а просто будет разделителем, отделяющим “setup” от “teardown”).
+                4) Для фикстур можно задавать область покрытия фикстур scope="class" . Допустимые значения:
+
+                        session   - один раз для всех тестов, запущенных в данной сессии
+                        module    - один раз для модуля
+
+                        class     - выполняется один раз перед запуском всех тестовых методов в классе
+                        function  - выполняется перед запуском каждого тестового метода в классе
+
+
+                5) Для фикстур можно задавать автоиспользование фикстур
+                        autouse=True  - фикстура запустится для каждого теста даже без явного вызова
+                        Без явной необходимости автоиспользованием фикстур лучше не пользоваться.
+
+
+                6) После этого мы можем вызывать фикстуру в тестах, передав ее как параметр.
+
+
+
+
+                            ЧТобы лучше понять фикстуры:
+                                Декораторы в питон - это функция, которая позволяет обернуть другую функцию для расширения её функциональности без непосредственного изменения её кода.
+                                            def decorator_function(func):
+                                                def wrapper():
+                                                    print('Функция-обёртка!')
+                                                    print('Оборачиваемая функция: {}'.format(func))
+                                                    print('Выполняем обёрнутую функцию...')
+                                                    func()
+                                                    print('Выходим из обёртки')
+                                                return wrapper
+
+                                            @decorator_function
+                                            def hello_world():
+                                                print('Hello world!')
+
+                                            hello_world()
+
+
+
+
+
 
 
 

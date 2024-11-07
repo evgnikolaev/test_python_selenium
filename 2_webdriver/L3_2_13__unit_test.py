@@ -104,6 +104,9 @@ unittest
     4. Изменить assert на self.assertEqual(), assertNotEqual, assertTrue, assertFalse
     5. Заменить строку запуска программы на unittest.main()
 
+
+
+
 '''
 
 
