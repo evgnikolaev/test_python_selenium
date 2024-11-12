@@ -404,7 +404,18 @@ https://habr.com/ru/companies/otus/articles/596071/
                     pip freeze > requirements.txt        фиксируем пакеты в requirements.txt
                     pip install -r requirements.txt      установить все пакеты из requirements.txt
 
+
                     pytest file.py    - запуск
+                    pytest -v (verbose, то есть подробный), то в отчёт добавится дополнительная информация со списком тестов и статусом их прохождения:
+
+                    pytest  -s  2_webdriver/L3_4_2__fixture.py        // -s, чтобы увидеть текст, который выводится командой print().
+
+                    pytest -s -v -m smoke 2_webdriver/L3_5_1__mark.py                   -   запуск тестов с нужной маркировкой                          ( -m smoke )
+                    pytest -s -v -m "not smoke" 2_webdriver/L3_5_1__mark.py             -   запуск тестов не имеющие заданную маркировку (инверсия)     (-m "not smoke")
+                    pytest -s -v -m "smoke or regression" 2_webdriver/L3_5_1__mark.py   -   Запустим smoke и regression-тесты                           (-m "smoke or regression")
+                    pytest -s -v -m "smoke and win10" 2_webdriver/L3_5_1__mark.py       -   Выбор тестов, имеющих несколько маркировок                  (-m "smoke and win10")
+
+
 
 
                 Преимущества:
@@ -489,7 +500,7 @@ https://habr.com/ru/companies/otus/articles/596071/
          -------------------------------------------
 
 
-            L3_4_2__fixture.py - файл
+            Фикстуры            -  L3_4_2__fixture.py - файл
 
             Фикстуры в контексте PyTest — это вспомогательные функции для наших тестов, которые не являются частью тестового сценария.
             Классический способ работы с фикстурами — создание setup- и teardown-методов в файле с тестами
@@ -513,12 +524,27 @@ https://habr.com/ru/companies/otus/articles/596071/
 
 
 
+
          -------------------------------------------
 
 
-                L3_4_3__fixture.py - файл
 
-                Фикстуры, возвращающие значение
+
+                Фикстуры, возвращающие значение       - L3_4_3__fixture.py - файл
+
+
+                        @pytest.fixture(scope="function")
+                        def browser():
+                            # “setup” - вначале теста
+                            print("\n......01")
+                            driver = webdriver.Chrome()
+                            yield driver
+
+                            # “teardown” - вконце теста
+                            print("\n......05")
+                            driver.quit()
+
+
 
                 1) Создадим фикстуру browser,
                 2) @pytest.fixture - укажем, что он является фикстурой с помощью декоратора @pytest.fixture
@@ -562,7 +588,36 @@ https://habr.com/ru/companies/otus/articles/596071/
 
 
 
+         -------------------------------------------
 
+
+
+
+                Маркировка тестов - для разделения тестов ( например smoke и regression)
+
+                        @pytest.mark.mark_name  - декоратор для маркировки (mark_name - любая строка)
+                        @pytest.mark.skip       - Пропуск тестов (стандартная метка)
+                        @pytest.mark.xfail      - помечать тест как ожидаемо падающий (стандартная метка)
+
+                        @pytest.mark.xfail(reason="fixing this bug right now") -  reason - добавляем сообщение в консоли
+                                                                                  запускаем с параметром -rx :       pytest -rx -v test_fixture10a.py
+                        @pytest.mark.xfail(strict=True)  - вместо статуса xpass - будет статус упавший failed
+
+
+
+
+                        Также метки нужно регистрировать в pytest.ini с содержимым:
+                                            [pytest]
+                                            markers =
+                                                smoke: marker for smoke tests
+                                                regression: marker for regression tests
+
+
+
+                        pytest -s -v -m smoke .\2_webdriver\L3_5_1__mark.py                   -   запуск тестов с нужной маркировкой                          ( -m smoke )
+                        pytest -s -v -m "not smoke" .\2_webdriver\L3_5_1__mark.py             -   запуск тестов не имеющие заданную маркировку (инверсия)     (-m "not smoke")
+                        pytest -s -v -m "smoke or regression" .\2_webdriver\L3_5_1__mark.py   -   Запустим smoke и regression-тесты                           (-m "smoke or regression")
+                        pytest -s -v -m "smoke and win10" .\2_webdriver\L3_5_1__mark.py       -   Выбор тестов, имеющих несколько маркировок                  (-m "smoke and win10")
 
 
 
