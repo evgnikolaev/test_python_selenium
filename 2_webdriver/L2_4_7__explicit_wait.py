@@ -14,6 +14,8 @@ browser.implicitly_wait(5)
 browser.get(url)
 
 '''
+https://www.selenium.dev/selenium/docs/api/py/webdriver_support/selenium.webdriver.support.expected_conditions.html#selenium.webdriver.support.expected_conditions.visibility_of
+
 Explicit Waits - явное ожидание. Задаем expected_conditions:
     title_is
     title_contains

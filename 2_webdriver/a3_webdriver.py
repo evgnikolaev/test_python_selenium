@@ -415,6 +415,8 @@ https://habr.com/ru/companies/otus/articles/596071/
                     pytest -s -v -m "smoke or regression" 2_webdriver/L3_5_1__mark.py   -   Запустим smoke и regression-тесты                           (-m "smoke or regression")
                     pytest -s -v -m "smoke and win10" 2_webdriver/L3_5_1__mark.py       -   Выбор тестов, имеющих несколько маркировок                  (-m "smoke and win10")
 
+                    pytest -s -v --browser_name=firefox test_cmd.py                     -   запуск в браузере firefox
+                    pytest -s -v --browser_name=chrome test_parser.py                   -   запуск в браузере chrome
 
 
 
