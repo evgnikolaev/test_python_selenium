@@ -11,7 +11,6 @@ from selenium.webdriver.support import expected_conditions as EC
 
 @pytest.fixture
 def browser():
-    print(__name__)
     driver = webdriver.Chrome()
     yield driver
     driver.quit()

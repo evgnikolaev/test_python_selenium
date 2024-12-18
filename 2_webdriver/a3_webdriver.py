@@ -624,7 +624,7 @@ https://habr.com/ru/companies/otus/articles/596071/
 
 
 
-
+todo - вынести pytest - в отделдьный файл, и дописать 3_6_1 - 3_6_8
 
 
 
