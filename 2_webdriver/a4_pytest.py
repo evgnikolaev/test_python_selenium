@@ -228,7 +228,117 @@
 
 
 
-todo - вынести pytest - в отделдьный файл, и дописать 3_6_1 - 3_6_8
+
+        -------------------------------------------
+
+
+
+
+                Параметризация тестов
+
+                @pytest.mark.parametrize('language', ["ru", "en-gb"])       - запустить один и тот же тест с разными входными параметрами
+
+
+
+
+         -------------------------------------------
+
+
+
+
+                Conftest.py — конфигурация тестов (одна фикстура на несколько файлов, чтобы в каждом файле не описывать)    - файл    L3_6_1__conftest.py
+
+                    ОЧЕНЬ ВАЖНО!
+
+                                tests/
+                                ├── conftest.py
+                                ├── subfolder
+                                │   └── conftest.py
+                                │   └── test_abs.py
+
+                        Следует избегать вложенности conftest.py , если запускаем из папки test например!
+
+                        В таком случае применяются ОБА файла conftest.py, что может вести к непредсказуемым ошибкам и конфликтам.
+                        Таким образом можно переопределять разные фикстуры, но мы в рамках курса рекомендуем придерживаться одного файла на проект/задачу и держать их горизонтально, как-нибудь так:
+
+                                selenium_course_solutions/
+                                ├── section3
+                                │   └── conftest.py
+                                │   └── test_languages.py
+                                ├── section4
+                                │   └── conftest.py
+                                │   └── test_main_page.py
+
+                                правильно!
+
+
+
+
+         -------------------------------------------
+
+
+
+
+
+                Conftest.py и передача параметров в командной строке
+
+                    В файле  conftest.py добавляем:
+
+
+                                        import pytest
+                                        from selenium import webdriver
+
+                                        def pytest_addoption(parser):
+                                            parser.addoption('--browser_name', action='store', default="chrome",
+                                                             help="Choose browser: chrome or firefox")
+
+
+                                        @pytest.fixture(scope="function")
+                                        def browser_conftest(request):
+                                            browser_name = request.config.getoption("browser_name")
+                                            browser = None
+                                            if browser_name == "chrome":
+                                                print("\nstart chrome browser for test..")
+                                                browser = webdriver.Chrome()
+                                            elif browser_name == "firefox":
+                                                print("\nstart firefox browser for test..")
+                                                browser = webdriver.Firefox()
+                                            else:
+                                                raise pytest.UsageError("--browser_name should be chrome or firefox")
+                                            yield browser
+                                            print("\nquit browser..")
+                                            browser.quit()
+
+
+
+
+                    Это делается с помощью встроенной функции pytest_addoption и фикстуры request:
+                    browser_name = request.config.getoption("browser_name")
+
+
+
+                    pytest -s -v  .\2_webdriver\L3_6_5__conftest_request.py
+                    Если запустить без параметра, будет ошибка.
+                    Можно задать значение параметра по умолчанию, чтобы в командной строке не обязательно было указывать параметр --browser_name, например, так:
+
+                                        parser.addoption('--browser_name', action='store', default="chrome",
+                                                         help="Choose browser: chrome or firefox")
+
+                                        pytest_addoption - функция должна быть прописана в conftest.py, иначе обибки
+
+                    pytest -s -v --browser_name=chrome .\2_webdriver\L3_6_5__conftest_request.py
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
